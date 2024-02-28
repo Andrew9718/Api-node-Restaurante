@@ -16,13 +16,13 @@ router.get('/Mostrartodos', async function (req, res, next) {
 
 //añadir nuevo--------------------------------------------------------------------------------------------
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage: multer.memoryStorage() });
 const path = require('path'); // Importa el módulo 'path'
 const fs = require('fs').promises;
 
 router.post('/', upload.single('Imagen'), async function (req, res, next) {
 
-    var ruta = "versel no permite rutas";
+    var ruta = "vercel no permite rutas";
 
     try {
         const restauranteData = req.body;
