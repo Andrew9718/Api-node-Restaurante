@@ -6,7 +6,8 @@ const Restaurantes = require('../services/restaurantes')
 //mostrar todos----------------------------------------------------------------------------------------
 router.get('/Mostrartodos', async function (req, res, next) {
     try {
-        res.json(await Restaurantes.getMultiple(req.query.page));
+        const restaurantes = await Restaurantes.getMultiple(req.query.page);
+        res.render('restaurantes', { restaurantes }); // Renderiza la vista 'restaurantes.ejs'
     } catch (err) {
         console.error(`No ha sido posible mostrar los restaurantes `, err.message);
         next(err);
