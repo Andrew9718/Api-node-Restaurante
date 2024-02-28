@@ -3,16 +3,43 @@ const helper = require('../helper');
 const config = require('../config');
 
 async function getMultiple(page = 1) {
-    const offset = helper.getOffset(page, config.listPerPage);
-    const rows = await db.query(
-        `SELECT * FROM Restaurantes LIMIT ${offset},${config.listPerPage}`
-    );
-    const data = helper.emptyOrRows(rows);
-    const meta = { page };
+    try {
+        const offset = helper.getOffset(page, config.listPerPage);
+        const rows = await db.query(
+            `SELECT * FROM Restaurantes LIMIT ${offset},${config.listPerPage}`
+        );
 
-    return {
-        data,
-        meta
+        // Verificar si se recuperaron filas de la base de datos
+        if (rows && rows.length > 0) {
+            // Mapear las filas de la base de datos a un arreglo de objetos de restaurantes
+            const data = rows.map(row => ({
+                ID: row.ID,
+                Nombre: row.Nombre,
+                Tipo: row.Tipo,
+                Direccion: row.Direccion,
+                Telefono: row.Telefono,
+                Imágen: row.Imagen
+                // Asegúrate de incluir cualquier otra propiedad que tengas en tu tabla de restaurantes
+            }));
+
+            // Crear un objeto de metadatos para incluir la información de la página
+            const meta = { page };
+
+            // Devolver un objeto que contiene los datos de los restaurantes y los metadatos
+            return {
+                data,
+                meta
+            };
+        } else {
+            // Si no se encontraron filas, devolver un objeto vacío
+            return {
+                data: [],
+                meta: { page }
+            };
+        }
+    } catch (error) {
+        // Capturar cualquier error y lanzarlo
+        throw error;
     }
 }
 
@@ -27,7 +54,7 @@ async function create(Restaurante, ruta) {
              (?, ?, ?, ?, ?, ?)`,
             [Restaurante.Nombre, Restaurante.Tipo, Restaurante.Direccion, Restaurante.Telefono, Restaurante.Imagen, ruta]
         );
-        console.log(ruta)
+        console.log(Restaurante.Imagen)
 
         if (!resultRestaurante.affectedRows) {
             return { message: 'Error al ingresar el restaurante' };

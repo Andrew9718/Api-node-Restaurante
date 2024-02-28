@@ -6,8 +6,7 @@ const Restaurantes = require('../services/restaurantes')
 //mostrar todos----------------------------------------------------------------------------------------
 router.get('/Mostrartodos', async function (req, res, next) {
     try {
-        const restaurantes = await Restaurantes.getMultiple(req.query.page);
-        res.render('restaurantes', { restaurantes }); // Renderiza la vista 'restaurantes.ejs'
+        res.json(await Restaurantes.getMultiple(req.query.page));
     } catch (err) {
         console.error(`No ha sido posible mostrar los restaurantes `, err.message);
         next(err);
@@ -23,20 +22,11 @@ const fs = require('fs').promises;
 
 router.post('/', upload.single('Imagen'), async function (req, res, next) {
 
-    var ruta = "vercel no permite rutas";
+    var ruta = "versel no permite rutas";
 
     try {
         const restauranteData = req.body;
-        restauranteData.Imagen = req.file ? req.file.path : null; // Guarda la ruta de la imagen
-
-        // if (req.file) {
-        //     const imgPath = path.join(__dirname, '..', req.file.path); // Ruta absoluta al archivo temporal
-        //     const imgDestPath = path.join(__dirname, '..', '/Imagenes', req.file.originalname); // Ruta donde se guardará la imagen
-        //    ruta = imgDestPath;
-        //     await fs.rename(imgPath, imgDestPath); // Mueve el archivo a la carpeta de imágenes
-        //     restauranteData.Img = imgDestPath; // Guarda la ruta de la imagen en la base de datos
-        //  }
-        // console.log(ruta)
+        restauranteData.Imagen = req.file ? req.file.buffer.toString('base64') : null; // Convierte la imagen a base64
 
         res.json(await Restaurantes.create(restauranteData, ruta));
     } catch (err) {
