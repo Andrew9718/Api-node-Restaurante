@@ -44,7 +44,7 @@ router.put('/:id', upload.single('Imagen'), async function (req, res, next) {
 
     try {
         const restauranteData = req.body;
-        restauranteData.Imagen = req.file ? req.file.path : null; // Guarda la ruta de la imagen
+        restauranteData.Imagen =  req.file ? req.file.buffer.toString('base64') : null; // Convierte la imagen a base64
 
         // if (req.file) {
         // comentar esta parte para versel

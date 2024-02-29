@@ -54,7 +54,7 @@ async function create(Restaurante, ruta) {
              (?, ?, ?, ?, ?, ?)`,
             [Restaurante.Nombre, Restaurante.Tipo, Restaurante.Direccion, Restaurante.Telefono, Restaurante.Imagen, ruta]
         );
-       // console.log(ruta)
+        // console.log(ruta)
 
         if (!resultRestaurante.affectedRows) {
             return { message: 'Error al ingresar el restaurante' };
